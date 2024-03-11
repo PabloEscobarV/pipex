@@ -6,7 +6,7 @@
 /*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:48:41 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/11 19:47:14 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/11 21:06:29 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,16 @@ char	*findexecut(char **path, const char *execute)
 	return (fullpath);
 }
 
-int	childproc(char **argv, char **envp)
+int	childproc(char **argv, char **envp, int *pipefd)
 {
 	char	**path;
 	char	*execute;
 
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[0]);
+	close(pipefd[1]);
 	path = pathmaker(envp);
 	execute = findexecut(path, *(argv + 1));
-	cout << "EXECUTE VAR:\t" << execute << endl;
 	if (execve(execute, argv + 1, NULL) == -1)
 	{
 		perror("execve");
@@ -115,7 +117,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	if (!pid)
 	{
-		if (childproc(argv, envp))
+		if (childproc(argv, envp, pipefd))
 			exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
 	}
