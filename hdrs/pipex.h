@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
+/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 18:56:22 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/12 13:53:18 by polenyc          ###   ########.fr       */
+/*   Updated: 2024/03/12 16:51:23 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,4 @@
 #include "../get_next_line/get_next_line_bonus.h"
 
 char	**pathmaker(char **envp);
-char	*findexecpath(char **path, char **envp, char **argv, int pname);
+char	*findexecpath(char **path, char **argv, int pname);

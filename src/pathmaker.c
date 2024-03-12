@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pathmaker.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
+/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 12:17:35 by polenyc           #+#    #+#             */
-/*   Updated: 2024/03/12 12:39:46 by polenyc          ###   ########.fr       */
+/*   Updated: 2024/03/12 16:51:10 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../hdrs/pipex.h"
 
 char	**pathsetstd(char **path, char *pathstd)
 {
@@ -66,7 +66,7 @@ char	**pathmaker(char **envp)
 	return (pathaddchr(path, '/'));
 }
 
-char	*findexecpath(char **path, char **envp, char **argv, int pname)
+char	*findexecpath(char **path, char **argv, int pname)
 {
 	char	*pathname;
 

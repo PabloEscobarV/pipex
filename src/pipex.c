@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
+/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:18:26 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/12 14:13:21 by polenyc          ###   ########.fr       */
+/*   Updated: 2024/03/12 16:52:02 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../hdrs/pipex.h"
 
 int	childproc(char **argv, char **envp, int *pipefd)
 {
@@ -30,7 +30,7 @@ int	childproc(char **argv, char **envp, int *pipefd)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	path = pathmaker(envp);
-	pathname = findexecpath(path, envp, argv, 2);
+	pathname = findexecpath(path, argv, 2);
 	execve(pathname, argv + 2, envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
@@ -53,6 +53,7 @@ int	parentprov(int *pipefd)
 	}
 	printf("RESULT:\t%s", data);
 	close(pipefd[0]);
+	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
