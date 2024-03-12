@@ -6,7 +6,7 @@
 /*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:18:26 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/12 12:56:00 by polenyc          ###   ########.fr       */
+/*   Updated: 2024/03/12 14:13:21 by polenyc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,26 @@
 
 int	childproc(char **argv, char **envp, int *pipefd)
 {
+	int		file;
 	char	*pathname;
 	char	**path;
-	char	**tmp;
 
-
+	file = open(*(argv + 1), O_RDONLY);
+	if (file == -1)
+	{
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
 	dup2(pipefd[1], STDOUT_FILENO);
+	dup2(file, STDIN_FILENO);
+	close(file);
 	close(pipefd[0]);
 	close(pipefd[1]);
 	path = pathmaker(envp);
-
-	pathname = findexecpath(path, envp, argv, 1);
-	printf("%s\n", pathname);
+	pathname = findexecpath(path, envp, argv, 2);
+	execve(pathname, argv + 2, envp);
+	perror("execve");
+	exit(EXIT_FAILURE);
 }
 
 int	parentprov(int *pipefd)
