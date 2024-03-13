@@ -6,7 +6,7 @@
 /*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 12:17:35 by polenyc           #+#    #+#             */
-/*   Updated: 2024/03/12 16:51:10 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/13 12:44:50 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,9 @@ char	*findexecpath(char **path, char **argv, int pname)
 		return (pathname);
 	free(pathname);
 	return (NULL);
+}
+
+char	*pathexec(char **argv, char **envp, int pname)
+{
+	return (findexecpath(pathmaker(envp), argv, pname));
 }

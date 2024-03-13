@@ -6,34 +6,25 @@
 /*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:18:26 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/12 16:52:02 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/13 14:55:38 by blackrider       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../hdrs/pipex.h"
 
-int	childproc(char **argv, char **envp, int *pipefd)
+void	freematrix(void **matrix)
 {
-	int		file;
-	char	*pathname;
-	char	**path;
+	void	**tmp;
 
-	file = open(*(argv + 1), O_RDONLY);
-	if (file == -1)
+	if (!matrix || !(*matrix))
+		return ;
+	tmp = matrix;
+	while (*matrix)
 	{
-		perror("open");
-		exit(EXIT_FAILURE);
+		free(*matrix);
+		++matrix;
 	}
-	dup2(pipefd[1], STDOUT_FILENO);
-	dup2(file, STDIN_FILENO);
-	close(file);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	path = pathmaker(envp);
-	pathname = findexecpath(path, argv, 2);
-	execve(pathname, argv + 2, envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
+	free(tmp);
 }
 
 int	parentprov(int *pipefd)
@@ -56,25 +47,58 @@ int	parentprov(int *pipefd)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
+void	startproc(char **argv, char **cmd, char *pathname, int *pipefd)
 {
-	int		pipefd[2];
-	__pid_t	pid;
+	int		file;
 
-	if (argc < 2)
-		return (0);
+	file = open(*(argv + 1), O_RDONLY);
+	if (file == -1)
+	{
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
+	dup2(pipefd[1], STDOUT_FILENO);
+	dup2(file, STDIN_FILENO);
+	close(file);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	execve(pathname, cmd, NULL);
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
+
+void	pipex(char **argv, char **envp)
+{
+	pid_t	pid;
+	pid_t	status;
+	int		pipefd[2];
+	char	*pathname;
+	char	**cmd;
+
 	if (pipe(pipefd) == -1)
 	{
-		printf("ERROR\n");
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
+	cmd = ft_split(*(argv + 2), ' ');
+	pathname = pathexec(cmd, envp, 0);
 	pid = fork();
 	if (!pid)
 	{
-		childproc(argv, envp, pipefd);
-		return (0);
+		startproc(argv, cmd, pathname, pipefd);
+		return ;
 	}
+	if (waitpid(pid, &status, 0) != -1)
+		printf("STATUS:\t%d\n", status);
 	parentprov(pipefd);
+	free(pathname);
+	freematrix((void **)cmd);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	if (argc < 2)
+		return (0);
+	pipex(argv, envp);
 	return (0);
 }

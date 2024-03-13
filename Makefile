@@ -29,7 +29,13 @@ fclean: clean
 	$(MAKE) -C $(LIBFTDIR) fclean
 	$(MAKE) -C $(GNLDIR) fclean
 
-re: fclean all
+re_clean:
+	rm -rf $(OBJDIR)
+
+re_fclean: re_clean
+	rm -f $(NAME)
+
+re: re_fclean all
 
 $(NAME): $(OBJ)
 	$(MAKE) -C $(GNLDIR) bonus
