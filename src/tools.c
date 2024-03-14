@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
+/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 11:25:43 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/14 11:31:14 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/14 13:03:28 by polenyc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,21 @@ char	**pathcmd(char **argv, char **envp)
 	char	**result;
 
 	cmd = ft_split(*argv, ' ');
-	pathname = ft_straddchrfree(pathexec(cmd, envp, 0), ' ');
+	pathname = pathexec(cmd, envp, 0);
+	pathname = ft_straddchrfree(pathname, ' ');
 	pathname = ft_strjoinfree(pathname, *argv, 0);
 	result = ft_split(pathname, ' ');
-	while (*cmd)
-	{
-		free(cmd);
-		++cmd;
-	}
-	free(cmd);
+	freematrix((void **)cmd);
 	free(pathname);
 	return (result);
+}
+
+void	printmatrix(char **data)
+{
+
+	while (*data)
+	{
+		printf("%s\n", *data);
+		++data;
+	}
 }

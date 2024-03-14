@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmdmaker.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
+/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 14:55:06 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/14 11:40:41 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/14 13:24:36 by polenyc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	endproc(char **cmdpath, char *filename, int *pipefd, int v_read)
 {
 	int		file;
 
-	file = open(filename, O_WRONLY);
+	file = open(filename, O_WRONLY | O_CREAT, 0644);
 	if (file == -1)
 	{
 		perror("open");
@@ -67,11 +67,8 @@ int	endproc(char **cmdpath, char *filename, int *pipefd, int v_read)
 
 int	cmdexec(char **cmdpath, char **argv, int *pipefd, int v_read)
 {
-	int	file;
-
-	file = -2;
 	if (!v_read)
-		return (startproc(cmdpath, *argv, pipefd));
+		return (startproc(cmdpath, *(argv - 1), pipefd));
 	if (!(*(argv + 2)))
 		return (endproc(cmdpath, *(argv + 1), pipefd, v_read));
 	return (cmdproc(cmdpath, pipefd, v_read));
@@ -80,12 +77,11 @@ int	cmdexec(char **cmdpath, char **argv, int *pipefd, int v_read)
 int	cmdexecute(char **argv, char **envp, int v_read)
 {
     pid_t   pid;
-    int     *pipefd;
+    int     pipefd[2];
     char	**cmdpath;
 
-    pipefd = pipefd_f(v_read, argv + 1);
-    if (!pipefd)
-        return (-1);
+	if (pipe(pipefd) == -1)
+		return (-1);
 	cmdpath = pathcmd(argv, envp);
     pid = fork();
     if (pid == -1)
@@ -101,6 +97,5 @@ int	cmdexecute(char **argv, char **envp, int v_read)
 		pipefd[0] = -1;
 	}
 	pid = pipefd[0];
-	free(pipefd);
 	return (pid);
 }

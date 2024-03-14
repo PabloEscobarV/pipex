@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
+/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 18:56:22 by blackrider        #+#    #+#             */
-/*   Updated: 2024/03/14 11:29:42 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/14 12:36:00 by polenyc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*pathexec(char **argv, char **envp, int pname);
 int		*freepipefd(int *pipefd);
 void	freematrix(void **data);
 char	**pathcmd(char **argv, char **envp);
+void	printmatrix(char **data);
 
 
 
