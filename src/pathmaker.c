@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pathmaker.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blackrider <blackrider@student.42.fr>      +#+  +:+       +#+        */
+/*   By: polenyc <polenyc@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 12:17:35 by polenyc           #+#    #+#             */
-/*   Updated: 2024/03/13 12:44:50 by blackrider       ###   ########.fr       */
+/*   Updated: 2024/03/14 13:41:16 by polenyc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,11 @@ char	**pathmaker(char **envp)
 char	*findexecpath(char **path, char **argv, int pname)
 {
 	char	*pathname;
+	char	**tmp;
 
 	if (!path)
 		return (NULL);
+	tmp = path;
 	pathname = ft_strjoin(*path, argv[pname]);
 	while (*path && access(pathname, F_OK))
 	{
@@ -79,10 +81,13 @@ char	*findexecpath(char **path, char **argv, int pname)
 		pathname = ft_strjoin(*path, argv[pname]);
 		++path;
 	}
-	if (*path)
-		return (pathname);
-	free(pathname);
-	return (NULL);
+	if (!(*path))
+	{
+		free(pathname);
+		pathname = NULL;
+	}
+	freematrix((void **)tmp);
+	return (pathname);
 }
 
 char	*pathexec(char **argv, char **envp, int pname)
